@@ -10,7 +10,6 @@ import {
   Route,
   Redirect,
   Switch,
-  useHistory,
 } from "react-router-dom";
 
 //user context usestate
@@ -40,10 +39,8 @@ import Lupon_v3 from "./pages/lupon_v3/lupon";
 import { getLoggedInUser } from "./api/user";
 
 const App = () => {
-  const history = useHistory();
-
   // then add this to the function that is called for re-rendering
-  history.go(0);
+
   const [user, setUser] = useState(null);
 
   //preventing lossing the user data
