@@ -16,7 +16,7 @@ import {
 //go to mui components then material icons
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle ";
+// import CheckCircleIcon from "@mui/icons-material/CheckCircle ";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 //api functions
@@ -119,7 +119,6 @@ const Signup = () => {
                 //parameter validation of 6character
                 hasSixChar ? (
                   <span className="text-success">
-                    <CheckCircleIcon className="mr-1" fontSize="small" />
                     <small>Ok 6 character</small>
                   </span>
                 ) : (
