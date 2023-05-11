@@ -177,7 +177,7 @@ const Member_table = (props) => {
   props.receivereload(getHandler);
   return (
     <div
-      className="p-5"
+      className="p-3"
       style={{
         PointerEvent: "none",
       }}

@@ -33,7 +33,9 @@ const Lup_memmodal = (props) => {
     formData.append("caseid", caseid);
     formData.append("Createdby", user);
     formData.append("Modifiedby", user);
+
     try {
+      if (!memberid) return toast.warning("Please select member");
       const result = await luponreq(`/create/member/record`, "POST", formData);
       if (result.error) throw result.error;
       toast.success(result.success);
@@ -166,6 +168,7 @@ const Lup_memmodal = (props) => {
       remark: "",
       id: "",
     });
+    setInsave("");
   };
 
   const onactioninstruct = (data) => {

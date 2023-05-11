@@ -192,6 +192,8 @@ const Lup_table = (props) => {
     setRowid("");
     setRowSelection("");
     props.onPassdata("");
+
+    props.onPassdata_2("");
   };
 
   const handle_cancel = () => {

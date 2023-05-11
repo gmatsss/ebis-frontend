@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 
 import { BsFileEarmarkPerson } from "react-icons/bs";
-
+import DescriptionIcon from "@mui/icons-material/Description";
 import { MdMessage } from "react-icons/md";
 import { BiAnalyse, BiSearch } from "react-icons/bi";
 import { BiCog } from "react-icons/bi";
@@ -56,6 +56,16 @@ const routes = [
     path: "/Lupon_v3",
     name: "Lupon v3",
     icon: <BiAnalyse />,
+  },
+  {
+    path: "/ckeditor",
+    name: "ckeditor",
+    icon: <AiTwotoneFileExclamation />,
+  },
+  {
+    path: "/report",
+    name: "Report",
+    icon: <DescriptionIcon />,
   },
   {
     path: "/Location",

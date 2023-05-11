@@ -19,12 +19,17 @@ const Members = () => {
   };
 
   return (
-    <div>
-      <div>
-        <Member_form receivecomandata={receivecomandata} onreload={getreload} />
-      </div>
-      <div>
-        <Member_table discommand={getcommand} receivereload={receivereload} />
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-9 col-md-12 ">
+          <Member_table discommand={getcommand} receivereload={receivereload} />
+        </div>
+        <div className="col-lg-3 col-md-12 r mt-5">
+          <Member_form
+            receivecomandata={receivecomandata}
+            onreload={getreload}
+          />
+        </div>
       </div>
     </div>
   );

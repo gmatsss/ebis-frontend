@@ -79,7 +79,6 @@ const Lup_docs_form = (props) => {
       docsData.append("Modifiedby", user);
       const c_docs = await sendRequest("/create/docs", "POST", docsData);
       if (c_docs.error) throw c_docs.error;
-      toast.warning("Correct file");
       setFilerr(true);
       props.disablecase(false);
       setSelectdocs("");
