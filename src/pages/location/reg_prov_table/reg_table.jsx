@@ -85,7 +85,6 @@ const Reg_table = (props) => {
     } catch (e) {
       // setLoading(false);
       console.log(e);
-      setLoggeedMessage({ error: e.message });
     }
   };
 
