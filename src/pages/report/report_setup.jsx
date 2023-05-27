@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-bootstrap/Modal";
-import { CKEditor } from "ckeditor4-react";
+import { CKEditor } from "ckeditor4-react"; //install ckeditor4
 import { Button } from "@mui/material";
 
 import { toast } from "react-toastify";
@@ -82,6 +82,7 @@ const Report_setup = (props) => {
                 ["Undo", "Redo"],
                 ["ExportPdf"],
                 ["Source"],
+                ["DocProps"],
                 {
                   name: "style",
                   items: ["Styles", "Format", "Font", "FontSize"],
@@ -160,8 +161,10 @@ const Report_setup = (props) => {
                   ],
                 },
               ],
+              fullPage: true,
+              allowedContent: true,
               extraPlugins:
-                "colorbutton,font,justify,print,tableresize,liststyle,pagebreak,exportpdf,forms",
+                "colorbutton,font,justify,print,tableresize,liststyle,pagebreak,exportpdf,forms,docprops",
               // removePlugins: "image",
               cloudServices_uploadUrl:
                 "https://33333.cke-cs.com/easyimage/upload/",

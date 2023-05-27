@@ -69,7 +69,7 @@ const App = (props) => {
         <div>
           <SideBar>
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/home" component={Home} />
               <Route exact path="/user" component={User} />
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/citizen_page" component={citizen_page} />

@@ -40,17 +40,15 @@ const citizen_page = () => {
   //<Col className='table' xs={12} sm={12} md={8} lg={8}><Table/></Col>
   //<Col className='form' xs={12} sm={12} md={4} lg={4}><Form /></Col>
   return (
-    <div className="mainko">
-      <Container lg={12}>
-        <Row className="parent  mt-5 ">
-          <Col className="table" xs={6} sm={6} md={9} lg={9}>
-            <Citizen_table receiverCreator={receiverCreator} />
-          </Col>
-          <Col className="form" xs={6} sm={6} md={3} lg={3}>
-            <Citizen_form onCountChanged={trigger} />
-          </Col>
-        </Row>
-      </Container>
+    <div className="container-luid">
+      <div className="row m-5">
+        <div className="col-lg-9">
+          <Citizen_table receiverCreator={receiverCreator} />
+        </div>
+        <div className="col-lg-3">
+          <Citizen_form onCountChanged={trigger} />
+        </div>
+      </div>
     </div>
   );
 };

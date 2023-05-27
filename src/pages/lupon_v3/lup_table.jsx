@@ -16,6 +16,8 @@ import { toast } from "react-toastify";
 //api
 import { useFetch } from "../../api/lupon";
 
+import Window from "../../window";
+
 import { UserContext } from "../../UserContext";
 const Lup_table = (props) => {
   const { user } = useContext(UserContext);
@@ -179,7 +181,7 @@ const Lup_table = (props) => {
   const [change, setChange] = useState(false);
 
   //optionally, you can manage the row selection state yourself
-  const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection, setRowSelection] = useState("");
   //setting row id to form
   const [rowid, setRowid] = useState("");
 
@@ -245,12 +247,15 @@ const Lup_table = (props) => {
 
   props.PassreloadCreator(getHandler);
 
+  const [case_id, setCase_id] = useState("");
+
   useEffect(() => {
     let datapass;
     for (name in rowSelection) {
       datapass = name;
     }
     getdata(datapass);
+    setCase_id(datapass);
   }, [rowSelection, data]);
 
   const getdata = async (newdata) => {
@@ -290,7 +295,7 @@ const Lup_table = (props) => {
         pointerEvents: statecomp ? "auto" : "none",
       }}
     >
-      <div className="mb-2">
+      <div className="mb-2 d-flex flex-row">
         {!change ? (
           <Button_lex
             variant="primary"
@@ -317,7 +322,11 @@ const Lup_table = (props) => {
         )}
 
         {!change ? (
-          <div></div>
+          <div>
+            <div style={{ pointerEvents: rowSelection ? "auto" : "none" }}>
+              <Window getid={case_id} />
+            </div>
+          </div>
         ) : (
           <Button_lex
             variant="danger"

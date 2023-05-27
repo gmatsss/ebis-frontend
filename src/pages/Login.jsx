@@ -41,7 +41,7 @@ const Login = () => {
         //user is set using usestate and usercontext
         setUser(res.username);
         //using usehistory react-router-dom it will be redirected to login
-        history.push("/home");
+        history.push("/");
       }
     } catch (err) {
       toast.error(err);
@@ -54,7 +54,7 @@ const Login = () => {
   return (
     <div className="container-fluid p-5 mt-5">
       <div className="row">
-        <div className="col-lg-6 " style={{ height: 600 }}>
+        <div className="col-lg-6 col-sm-12" style={{ height: 600 }}>
           <div className="d-flex  justify-content-center">
             <img
               src={Img_bg}
@@ -81,7 +81,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="col-lg-6 border-start ">
+        <div className="col-lg-6  col-sm-12 border-start ">
           <div className="text-center mb-5  mt-5">
             <label htmlFor="" className="h2">
               Login Account

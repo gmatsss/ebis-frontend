@@ -9,7 +9,7 @@ import {
   FaFingerprint,
   FaSignOutAlt,
 } from "react-icons/fa";
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { BsFileEarmarkPerson } from "react-icons/bs";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { MdMessage } from "react-icons/md";
@@ -43,80 +43,85 @@ const routes = [
     icon: <GroupsIcon />,
   },
   {
-    path: "/lupon_page",
-    name: "Lupon",
-    icon: <BiAnalyse />,
+    path: "/location",
+    name: "Location",
+    icon: <LocationOnIcon />,
   },
-  {
-    path: "/Lupon_v2",
-    name: "Lupon v2",
-    icon: <BiAnalyse />,
-  },
+  // {
+  //   path: "/lupon_page",
+  //   name: "Lupon",
+  //   icon: <BiAnalyse />,
+  // },
+  // {
+  //   path: "/Lupon_v2",
+  //   name: "Lupon v2",
+  //   icon: <BiAnalyse />,
+  // },
   {
     path: "/Lupon_v3",
     name: "Lupon v3",
     icon: <BiAnalyse />,
   },
-  {
-    path: "/ckeditor",
-    name: "ckeditor",
-    icon: <AiTwotoneFileExclamation />,
-  },
+  // {
+  //   path: "/ckeditor",
+  //   name: "ckeditor",
+  //   icon: <AiTwotoneFileExclamation />,
+  // },
   {
     path: "/report",
     name: "Report",
     icon: <DescriptionIcon />,
   },
-  {
-    path: "/Location",
-    name: "Location",
-    icon: <AiTwotoneFileExclamation />,
-    subRoutes: [
-      {
-        path: "/Location/Region",
-        name: "Region ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
-  {
-    path: "/order",
-    name: "Order",
-    icon: <BsCartCheck />,
-  },
-  {
-    path: "/settings",
-    name: "Settings",
-    icon: <BiCog />,
-    exact: true,
-    subRoutes: [
-      {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
+  // {
+  //   path: "/Location",
+  //   name: "Location",
+  //   icon: <AiTwotoneFileExclamation />,
+  //   subRoutes: [
+  //     {
+  //       path: "/Location/Region",
+  //       name: "Region ",
+  //       icon: <FaUser />,
+  //     },
+  //     {
+  //       path: "/settings/2fa",
+  //       name: "2FA",
+  //       icon: <FaLock />,
+  //     },
+  //     {
+  //       path: "/settings/billing",
+  //       name: "Billing",
+  //       icon: <FaMoneyBill />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: "/order",
+  //   name: "Order",
+  //   icon: <BsCartCheck />,
+  // },
+  // {
+  //   path: "/settings",
+  //   name: "Settings",
+  //   icon: <BiCog />,
+  //   exact: true,
+  //   subRoutes: [
+  //     {
+  //       path: "/settings/profile",
+  //       name: "Profile ",
+  //       icon: <FaUser />,
+  //     },
+  //     {
+  //       path: "/settings/2fa",
+  //       name: "2FA",
+  //       icon: <FaLock />,
+  //     },
+  //     {
+  //       path: "/settings/billing",
+  //       name: "Billing",
+  //       icon: <FaMoneyBill />,
+  //     },
+  //   ],
+  // },
   {
     path: "/logout",
     name: "Logout",

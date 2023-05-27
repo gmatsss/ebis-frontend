@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
-      <span className="navbar-brand ms-4">Dashboard</span>
+      <span className="navbar-brand ms-4">EBIS</span>
 
       <div className="collapse navbar-collapse d-flex flex-row-reverse" id="">
         <ul className="navbar-nav ml-auto">

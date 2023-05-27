@@ -173,3 +173,15 @@ main {
   bottom: 0px;
   left: 0px;
 }
+
+.printme {
+  display: none;
+}
+@media print {
+  .no-printme {
+    display: none;
+  }
+  .printme {
+    display: block;
+  }
+}

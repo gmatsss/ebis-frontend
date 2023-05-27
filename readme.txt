@@ -14,3 +14,26 @@ remove react strict mode
 //MRT_EditRowModal
 MRT_EditActionButtons
 mrt_tableroots
+
+
+
+
+       <Button_lex
+                variant="success"
+                className="btn-component mx-1"
+                title="Save"
+                size="lg"
+                onClick={() => {
+                  window.shownoModalDialog(
+                    // `http://localhost:8000/print/${case_id}`,
+                    "",
+                    "",
+                    "dialogtop:50; dialogleft: 230; center:1; dialogwidth:790; dialogheight:570; scroll:0; resizable:1"
+                  );
+                }}
+              >
+                <span className="d-flex justify-content-around">
+                  {/* <SaveIcon /> */}
+                  Print
+                </span>
+              </Button_lex>
