@@ -6,13 +6,18 @@ import { Button } from "@mui/material";
 import { useFetch } from "./api/report";
 import Select from "react-select";
 
+import Parser from "html-react-parser";
+import ReactToPrint from "react-to-print";
+
 const Window = (props) => {
   const { sendRequest } = useFetch();
   const [showWindowPortal, SetShowWindowPortal] = useState(false);
   const [options, setOptions] = useState("");
   const [getreport, setGetreport] = useState("");
 
-  const [chairman, setChairman] = useState("");
+  const myContainer = useRef();
+
+  const [complainant, setComplainant] = useState("");
 
   const toggleWindowPortal = () => {
     SetShowWindowPortal(!showWindowPortal);
@@ -37,23 +42,81 @@ const Window = (props) => {
 
   const handleChange = async (selected) => {
     const result = await sendRequest(`/g/r/record/${selected.value}`, "GET");
-    setGetreport(result[0].reportsetup);
-    setChairman("ako");
+    const getcase = await sendRequest(`/g/c/record/${props.getid}`, "GET");
+    const getcomplain = await sendRequest(
+      `/g/comp/record/${props.getid}`,
+      "GET"
+    );
+
+    setGetreport(
+      Parser(result[0].reportsetup, {
+        replace: (domNode) => {
+          if (domNode.attribs && domNode.attribs.id === "respondent") {
+            return (
+              <span style={{ borderBottom: "1px solid" }}>
+                {getcase.nameofresp}
+              </span>
+            );
+          }
+          if (domNode.attribs && domNode.attribs.id === "complainant") {
+            return (
+              <span style={{ borderBottom: "1px solid" }}>
+                {getcase.nameofcomp}
+              </span>
+            );
+          }
+          if (domNode.attribs && domNode.attribs.id === "caseno") {
+            return (
+              <span style={{ borderBottom: "1px solid", color: "red" }}>
+                {getcase.caseno}
+              </span>
+            );
+          }
+          if (domNode.attribs && domNode.attribs.id === "status") {
+            return (
+              <span style={{ borderBottom: "1px solid" }}>
+                {getcomplain.compstatus}
+              </span>
+            );
+          }
+          if (domNode.attribs && domNode.attribs.id === "natureofcomplain") {
+            return (
+              <span style={{ borderBottom: "1px solid" }}>
+                {getcomplain.compnature}
+              </span>
+            );
+          }
+          if (domNode.attribs && domNode.attribs.id === "dateofcomplain") {
+            return (
+              <span style={{ borderBottom: "1px solid" }}>
+                {getcomplain.compdate}
+              </span>
+            );
+          }
+          if (domNode.attribs && domNode.attribs.id === "description") {
+            return (
+              <span style={{ borderBottom: "1px solid" }}>
+                {getcomplain.description}
+              </span>
+            );
+          }
+        },
+      })
+    );
   };
 
-  const Print = () => {
-    var divContents = getreport;
-    var a = window.open();
-    a.document.write("<html>");
-    a.document.write("<body>");
-    a.document.write(divContents);
-    a.document.write("</body></html>");
-    a.document.close();
-    a.print();
-    a.close();
-  };
+  // const Print = () => {
+  //   const printableContent = document.getElementById("printable-content");
+  //   const printWindow = window.open("", "", "height=1000,width=1000");
+  //   printWindow.document.write(printableContent.innerHTML);
+  //   printWindow.print();
+  // };
 
-  const theObj = { __html: getreport };
+  // class ComponentToPrint extends React.Component {
+  //   render() {
+  //     return <div>{getreport}</div>;
+  //   }
+  // }
 
   return (
     <div>
@@ -69,10 +132,10 @@ const Window = (props) => {
         <MyWindowPortal>
           <div className="container-fluid">
             <div className="row d-flex">
-              <div className="col-2">
+              <div className="col-3">
                 <h1> Case Report </h1>
               </div>
-              <div className="col-7 mt-1">
+              <div className="col-6 mt-1">
                 <Select
                   placeholder="Select report name"
                   options={options}
@@ -87,23 +150,29 @@ const Window = (props) => {
                     color={showWindowPortal ? "error" : "success"}
                     variant="contained"
                   >
-                    Close Print
+                    Close Report
                   </Button>
-                  <Button
-                    onClick={() => Print(false)}
-                    color="success"
-                    variant="contained"
-                  >
-                    Print Report!
-                  </Button>
+
+                  <ReactToPrint
+                    trigger={() => (
+                      <Button
+                        // onClick={() => Print(false)}
+                        color="success"
+                        variant="contained"
+                      >
+                        Print Report!
+                      </Button>
+                    )}
+                    content={() => myContainer.current}
+                  />
                 </div>
               </div>
             </div>
-            <div
-              className="row"
-              id="printablediv"
-              dangerouslySetInnerHTML={theObj}
-            ></div>
+
+            {/* report page */}
+            <div className="row" id="printable-content" ref={myContainer}>
+              {getreport}
+            </div>
           </div>
         </MyWindowPortal>
       )}

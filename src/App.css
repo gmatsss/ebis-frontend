@@ -174,14 +174,13 @@ main {
   left: 0px;
 }
 
-.printme {
-  display: none;
-}
 @media print {
-  .no-printme {
-    display: none;
+  * {
+    margin: 1px !important;
+    padding: 1px !important;
   }
-  .printme {
-    display: block;
+
+  li {
+    margin: 0 0 10px 20px !important;
   }
 }

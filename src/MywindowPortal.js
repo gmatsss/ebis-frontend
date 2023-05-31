@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
-const copyStyles = (src, dest) => {
+function copyStyles(src, dest) {
   Array.from(src.styleSheets).forEach((styleSheet) => {
-    dest.head.appendChild(styleSheet.ownerNode.cloneNode(true));
+    const styleElement = styleSheet.ownerNode.cloneNode(true);
+    styleElement.href = styleSheet.href;
+    dest.head.appendChild(styleElement);
   });
   Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
-};
-
+}
 window.shownoModalDialog = function (arg1, arg2, arg3) {
   var i;
   var w;
@@ -84,7 +85,7 @@ export class MyWindowPortal extends React.Component {
     this.externalWindow = window.shownoModalDialog(
       "",
       "Print Window",
-      "dialogtop:50; dialogleft: 230; center:1; dialogwidth:1590; dialogheight:870; scroll:0; resizable:1"
+      "dialogtop:50; dialogleft: 230; center:1; dialogwidth:1390; dialogheight:770; scroll:0; resizable:1"
     );
 
     // Step 4: append the container <div> (that has props.chi.dren append to it) to

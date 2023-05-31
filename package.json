@@ -43,6 +43,7 @@
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "framer-motion": "^10.2.5",
+    "html-react-parser": "^3.0.16",
     "material-react-table": "^1.9.1",
     "mdb-react-ui-kit": "^6.0.0",
     "notiflix": "^3.2.6",
