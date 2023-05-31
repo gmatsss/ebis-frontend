@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-bootstrap/Modal";
+import { MyWindowPortal } from "../../MywindowPortal";
 import { CKEditor } from "ckeditor4-react"; //install ckeditor4
 import { Button } from "@mui/material";
 

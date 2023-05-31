@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 function copyStyles(src, dest) {
@@ -10,28 +10,6 @@ function copyStyles(src, dest) {
   });
   Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
 }
-
-// function copyStyles(sourceDoc, targetDoc) {
-//   Array.from(sourceDoc.styleSheets).forEach((styleSheet) => {
-//     if (styleSheet.cssRules) {
-//       // true for inline styles
-//       const newStyleEl = targetDoc.createElement("style");
-
-//       Array.from(styleSheet.cssRules).forEach((cssRule) => {
-//         newStyleEl.appendChild(targetDoc.createTextNode(cssRule.cssText));
-//       });
-
-//       targetDoc.head.appendChild(newStyleEl);
-//     } else if (styleSheet.href) {
-//       // true for stylesheets loaded from a URL
-//       const newLinkEl = targetDoc.createElement("link");
-
-//       newLinkEl.rel = "stylesheet";
-//       newLinkEl.href = styleSheet.href;
-//       targetDoc.head.appendChild(newLinkEl);
-//     }
-//   });
-// }
 
 window.shownoModalDialog = function (arg1, arg2, arg3) {
   var i;
@@ -90,40 +68,39 @@ window.shownoModalDialog = function (arg1, arg2, arg3) {
   return targetWin;
 };
 
-export class MyWindowPortal extends React.PureComponent {
+export class MyWindowPortal extends React.Component {
   constructor(props) {
     super(props);
-    this.containerEl = null;
+
+    // Step 1: create a container <div>
+    this.containeEl = document.createElement("div");
     this.externalWindow = null;
   }
 
+  render() {
+    // Step 2: append props.children to the container <div> that isn't mounted yet
+    return ReactDOM.createPortal(this.props.children, this.containeEl);
+  }
+
   componentDidMount() {
-    // STEP 1: Create a new window, a div, and append it to the window. The div
-    // *MUST** be created by the window it is to be appended to (Edge only)
+    // Step 3: open a new browser window and store a reference to it
     this.externalWindow = window.shownoModalDialog(
       "",
       "Print Window",
       "dialogtop:50; dialogleft: 230; center:1; dialogwidth:1390; dialogheight:770; scroll:0; resizable:1"
     );
-    this.containerEl = this.externalWindow.document.createElement("div");
-    this.externalWindow.document.body.appendChild(this.containerEl);
-    copyStyles(window.document, this.externalWindow.document);
+
+    // Step 4: append the container <div> (that has props.chi.dren append to it) to
+    // the body of the new MyWindowPortal
+    this.externalWindow.document.body.appendChild(this.containeEl);
+
+    this.externalWindow.document.title = "Print Tab";
+    copyStyles(document, this.externalWindow.document);
   }
 
   componentWillUnmount() {
-    // STEP 2: This will fire when this.state.showWindowPortal in the parent component
-    // becomes false so we tidy up by just closing the window
+    // Step 5: This will fire when this.state.showWindowPortal in the parent componentDidMount
+    // become false. So we tidy up by closing the window
     this.externalWindow.close();
-  }
-
-  render() {
-    // STEP 3: The first render occurs before componentDidMount (where we open the
-    // new window) so container may be null, in this case render nothing.
-    if (!this.containerEl) {
-      return null;
-    }
-
-    // STEP 4: Append props.children to the container <div> in the new window
-    return ReactDOM.createPortal(this.props.children, this.containerEl);
   }
 }
