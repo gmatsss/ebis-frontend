@@ -1,36 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
-// function copyStyles(src, dest) {
-//   Array.from(src.styleSheets).forEach((styleSheet) => {
-//     const styleElement = styleSheet.ownerNode.cloneNode(true);
-//     styleElement.href = styleSheet.href;
-//     dest.head.appendChild(styleElement);
-//   });
-//   Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
-// }
-
-function copyStyles(sourceDoc, targetDoc) {
-  Array.from(sourceDoc.styleSheets).forEach((styleSheet) => {
-    if (styleSheet.cssRules) {
-      // true for inline styles
-      const newStyleEl = targetDoc.createElement("style");
-
-      Array.from(styleSheet.cssRules).forEach((cssRule) => {
-        newStyleEl.appendChild(targetDoc.createTextNode(cssRule.cssText));
-      });
-
-      targetDoc.head.appendChild(newStyleEl);
-    } else if (styleSheet.href) {
-      // true for stylesheets loaded from a URL
-      const newLinkEl = targetDoc.createElement("link");
-
-      newLinkEl.rel = "stylesheet";
-      newLinkEl.href = styleSheet.href;
-      targetDoc.head.appendChild(newLinkEl);
-    }
+function copyStyles(src, dest) {
+  Array.from(src.styleSheets).forEach((styleSheet) => {
+    const styleElement = styleSheet.ownerNode.cloneNode(true);
+    styleElement.rel = "stylesheet";
+    styleElement.href = styleSheet.href;
+    dest.head.appendChild(styleElement);
   });
+  Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
 }
+
+// function copyStyles(sourceDoc, targetDoc) {
+//   Array.from(sourceDoc.styleSheets).forEach((styleSheet) => {
+//     if (styleSheet.cssRules) {
+//       // true for inline styles
+//       const newStyleEl = targetDoc.createElement("style");
+
+//       Array.from(styleSheet.cssRules).forEach((cssRule) => {
+//         newStyleEl.appendChild(targetDoc.createTextNode(cssRule.cssText));
+//       });
+
+//       targetDoc.head.appendChild(newStyleEl);
+//     } else if (styleSheet.href) {
+//       // true for stylesheets loaded from a URL
+//       const newLinkEl = targetDoc.createElement("link");
+
+//       newLinkEl.rel = "stylesheet";
+//       newLinkEl.href = styleSheet.href;
+//       targetDoc.head.appendChild(newLinkEl);
+//     }
+//   });
+// }
 
 window.shownoModalDialog = function (arg1, arg2, arg3) {
   var i;
