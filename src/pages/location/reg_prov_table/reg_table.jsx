@@ -26,7 +26,7 @@ const Reg_table = (props) => {
   const [region, setRegion] = useState({
     _id: "",
     code: "",
-    name: "",
+    description: "",
   });
 
   const [insave, setInsave] = useState("");
@@ -37,31 +37,31 @@ const Reg_table = (props) => {
         header: "Code",
       },
       {
-        accessorKey: "name",
+        accessorKey: "description",
         header: "Region name",
       },
       {
-        header: "DateCreated",
-        accessorKey: "DateCreated",
+        header: "dateCreatedTime",
+        accessorKey: "dateCreatedTime",
         enableEditing: false,
       },
       {
-        header: "Createdby",
-        accessorKey: "Createdby",
+        header: "createdBy",
+        accessorKey: "createdBy",
         enableEditing: false,
       },
       {
-        header: "DateModified",
-        accessorKey: "DateModified",
+        header: "dateModifiedTime",
+        accessorKey: "dateModifiedTime",
 
         enableEditing: false,
       },
       {
-        header: "Modifiedby",
-        accessorKey: "Modifiedby",
+        header: "modifiedBy",
+        accessorKey: "modifiedBy",
         enableEditing: false,
       },
-      { header: "Status", accessorKey: "Status", enableEditing: false },
+      { header: "status", accessorKey: "status", enableEditing: false },
       { header: "_id", accessorKey: "_id", enableEditing: false },
     ],
     []
@@ -100,7 +100,7 @@ const Reg_table = (props) => {
     setRegion({
       _id: "",
       code: "",
-      name: "",
+      description: "",
     });
     setInsave("");
   };
@@ -111,7 +111,7 @@ const Reg_table = (props) => {
       ...region,
       _id: data._id,
       code: data.code,
-      name: data.name,
+      description: data.description,
     });
     setInsave("edit");
     setShow(true);
@@ -119,16 +119,16 @@ const Reg_table = (props) => {
 
   const validate = () => {
     if (!region.code) return "Code is required";
-    if (!region.name) return "Region name is required";
+    if (!region.description) return "Region name is required";
   };
 
   const handle_saved = async () => {
     const formData = {
       _id: region._id,
       code: region.code,
-      name: region.name,
-      Modifiedby: user,
-      Createdby: user,
+      description: region.description,
+      modifiedBy: user,
+      createdBy: user,
     };
 
     if (insave === "edit") {
@@ -168,7 +168,7 @@ const Reg_table = (props) => {
       async function okCb() {
         const details = {
           _id: data._id,
-          Modifiedby: data.Modifiedby,
+          modifiedBy: data.modifiedBy,
         };
         const result = await sendRequest("/d/record", "POST", details);
         if (result.error) return toast.error(result.error);
@@ -234,11 +234,11 @@ const Reg_table = (props) => {
               label="Region Name"
               variant="standard"
               className="mb-4"
-              value={region.name}
+              value={region.description}
               onChange={(e) =>
                 setRegion({
                   ...region,
-                  name: e.target.value,
+                  description: e.target.value,
                 })
               }
             />
@@ -335,19 +335,10 @@ const Reg_table = (props) => {
           },
           density: "compact",
           columnVisibility: {
-            Createdby: false,
-            DateCreated: false,
-            Status: false,
+            createdBy: false,
+            dateCreatedTime: false,
+            status: false,
             _id: false,
-            imageofcomp: false,
-            addressofcomp: false,
-            addressofresp: false,
-            imageofresp: false,
-
-            compdate: false,
-            compnature: false,
-            description: false,
-            compstatus: false,
           },
         }}
         //customize built-in buttons in the top-right of top toolbar

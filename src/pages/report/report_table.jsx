@@ -74,6 +74,7 @@ const Report_table = (props) => {
   );
 
   const [data, setData] = useState({});
+  const [rptstp, setRptstp] = useState();
 
   const [reportdata, setReportdata] = useState({
     _id: "",
@@ -115,6 +116,7 @@ const Report_table = (props) => {
       datapass = name;
     }
     getdata(datapass);
+    setRptstp(datapass);
   }, [rowSelection, data]);
 
   const getdata = async (newdata) => {
@@ -122,6 +124,7 @@ const Report_table = (props) => {
       const result = await sendRequest(`/g/r/record/${newdata}`, "GET");
       setStatebutton(false);
       props.reportid(result[0]);
+      //delete
       setReportdata({
         ...reportdata,
         _id: result[0]._id,
@@ -139,7 +142,7 @@ const Report_table = (props) => {
   const handle_delete = () => {
     Notiflix.Confirm.show(
       "Delete ",
-      `Delete this case no ${reportdata.menuname}?`,
+      `Delete this Report ${reportdata.menuname}?`,
       "Yes",
       "No",
       async function okCb() {
@@ -163,71 +166,138 @@ const Report_table = (props) => {
     );
   };
 
+  window.shownoModalDialog = function (arg1, arg2, arg3) {
+    var i;
+    var w;
+    var h;
+    var resizable = "no";
+    var scroll = "no";
+    var status = "no";
+    var mdattrs = arg3.split(";");
+    for (i = 0; i < mdattrs.length; i++) {
+      var mdattr = mdattrs[i].split(":");
+      var n = mdattr[0],
+        v = mdattr[1];
+      if (n) {
+        n = n.trim().toLowerCase();
+      }
+      if (v) {
+        v = v.trim().toLowerCase();
+      }
+      if (n == "dialogheight") {
+        h = v.replace("px", "");
+      } else if (n == "dialogwidth") {
+        w = v.replace("px", "");
+      } else if (n == "resizable") {
+        resizable = v;
+      } else if (n == "scroll") {
+        scroll = v;
+      } else if (n == "status") {
+        status = v;
+      }
+    }
+    var left = window.screenX + window.outerWidth / 2 - w / 2;
+    var top = window.screenY + window.outerHeight / 2 - h / 2;
+    if (top > 30) {
+      top = top - 30;
+    }
+    var targetWin = window.open(
+      arg1,
+      arg2,
+      "toolbar=no, location=no, directories=no, status=" +
+        status +
+        ", menubar=no, scrollbars=" +
+        scroll +
+        ", resizable=" +
+        resizable +
+        ", copyhistory=no, width=" +
+        w +
+        ", height=" +
+        h +
+        ", top=" +
+        top +
+        ", left=" +
+        left
+    );
+
+    return targetWin;
+  };
+
   return (
     <div>
-      <div className="container-fluid border shadow p-3 mb-5 bg-body d-flex justify-content-center ">
-        <div className="row  d-flex flex-row ">
+      <div className="container-fluid  p-3 mb-3 bg-body d-flex ">
+        <div className="row d-flex flex-row ">
           <div className="col-sm-3 col-lg-3 ">
             <Button
-              style={{ height: "100%", width: "100%" }}
+              style={{ width: "100%" }}
               variant="contained"
               startIcon={
-                <AddCircleIcon style={{ height: "50px", width: "50px" }} />
+                <AddCircleIcon style={{ height: "30px", width: "30px" }} />
               }
-              size="large"
+              disabled={props.rebrgyvar}
+              size="small"
               color="success"
               onClick={() => {
                 props.onadd("add");
               }}
             >
-              Create <br /> report
+              Create
             </Button>
           </div>
           <div className="col-sm-3 col-lg-3 ">
             <Button
-              style={{ height: "100%", width: "100%" }}
+              style={{ width: "100%" }}
               variant="contained"
               startIcon={
-                <ModeEditIcon style={{ height: "50px", width: "50px" }} />
+                <ModeEditIcon style={{ height: "30px", width: "30px" }} />
               }
-              size="large"
+              size="small"
               color="info"
               disabled={statebutton ? true : false}
               onClick={() => {
                 props.onadd("edit");
               }}
             >
-              Edit <br /> report
+              Edit
             </Button>
           </div>
           <div className="col-sm-3 col-lg-3 ">
             <Button
+              style={{ width: "100%" }}
               variant="contained"
-              endIcon={<DeleteIcon style={{ height: "50px", width: "50px" }} />}
-              style={{ height: "100%", width: "100%" }}
-              size="large"
+              startIcon={
+                <DeleteIcon style={{ height: "30px", width: "30px" }} />
+              }
+              size="small"
               color="error"
               disabled={statebutton ? true : false}
               onClick={() => {
                 handle_delete();
               }}
             >
-              Delete <br /> report
+              Delete
             </Button>
           </div>
           <div className="col-sm-3 col-lg-3 ">
             <Button
+              style={{ width: "100%" }}
               variant="contained"
-              endIcon={<FeedIcon style={{ height: "50px", width: "50px" }} />}
-              style={{ height: "100%", width: "100%" }}
-              size="large"
+              startIcon={<FeedIcon style={{ height: "30px", width: "30px" }} />}
+              size="small"
               color="secondary"
               disabled={statebutton ? true : false}
-              onClick={() => {
-                props.onsetup();
-              }}
+              // onClick={() => {
+              //   props.onsetup();
+              // }}
+              onClick={() =>
+                window.shownoModalDialog(
+                  `/report_setup#${rptstp}`,
+                  "Print Window",
+                  "dialogtop:50; dialogleft: 230; center:1; dialogwidth:1390; dialogheight:770; scroll:0; resizable:1"
+                )
+              }
             >
-              Setup <br /> report
+              Setup
             </Button>
           </div>
         </div>

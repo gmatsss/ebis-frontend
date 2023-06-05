@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Report_table from "./report_table";
 import Report_form from "./report_form";
-import Report_setup from "./report_setup";
+
 const Report_page = () => {
   const onadd = (datain) => {
     addvar && addvar(datain);
@@ -31,44 +31,39 @@ const Report_page = () => {
   const onsetup = (datain) => {
     setupvar && setupvar(datain);
   };
-
   let setupvar = (datainfo) => {};
-
-  const receivesetup = (handler) => {
-    setupvar = handler;
-  };
-
-  const onreloadsetup = (datain) => {
-    onreloadsetupvar && onreloadsetupvar(datain);
-  };
-
   let onreloadsetupvar = (datainfo) => {};
-
   const receiveonreloadsetup = (handler) => {
     onreloadsetupvar = handler;
   };
+
+  const [rebrgyvar, setRebrgyvar] = useState(true);
+  const brgyvar = (datain) => {
+    setRebrgyvar(datain);
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-lg-12">
-          <Report_form
-            receiveadd={receiveadd}
-            onreload={onreload}
-            reportone={reportone}
-          />
-
+        <h1>Report</h1>
+      </div>
+      <div className="row">
+        <div className="col-lg-9">
           <Report_table
             onadd={onadd}
             receivereload={receivereload}
             reportid={reportid}
             onsetup={onsetup}
             receiveonreloadsetup={receiveonreloadsetup}
+            rebrgyvar={rebrgyvar}
           />
-
-          <Report_setup
-            receivesetup={receivesetup}
-            reportsetup={reportone}
-            onreloadsetup={onreloadsetup}
+        </div>
+        <div className="col-lg-3">
+          <Report_form
+            receiveadd={receiveadd}
+            onreload={onreload}
+            reportone={reportone}
+            brgyvar={brgyvar}
           />
         </div>
       </div>

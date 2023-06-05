@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import Print from "./pages/report/print";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { BrowserRouter as Router, Route } from "react-router-dom";

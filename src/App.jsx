@@ -35,7 +35,8 @@ import member_list from "./pages/member/member";
 import Ckeditor from "./pages/ckeditor/example";
 import Report_page from "./pages/report/report_page";
 import Location_page from "./pages/location/location_page";
-import Print from "./pages/report/print";
+import Print from "./pages/report/report_setup";
+import Rpt_lupon from "./rpt_lupon";
 
 import Lupon_v2 from "./pages/lupon_v2/lupon";
 import Lupon_v3 from "./pages/lupon_v3/lupon";
@@ -61,37 +62,53 @@ const App = (props) => {
       .catch((err) => toast(err));
   }, []);
 
+  const loc = useLocation();
+
   function Greeting(props) {
     const isLoggedIn = props.isLoggedIn;
 
     if (isLoggedIn) {
       return (
         <div>
-          <SideBar>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/user" component={User} />
-              <Route exact path="/logout" component={Logout} />
-              <Route exact path="/citizen_page" component={citizen_page} />
-              <Route exact path="/member_list" component={member_list} />
-              <Route exact path="/lupon_page" component={lupon_page} />
-              <Route exact path="/Lupon_v2" component={Lupon_v2} />
-              <Route exact path="/Lupon_v3" component={Lupon_v3} />
-              <Route exact path="/ckeditor" component={Ckeditor} />
-              <Route exact path="/report" component={Report_page} />
-              <Route exact path="/location" component={Location_page} />
-            </Switch>
-          </SideBar>
+          {loc.pathname === "/report_setup" || loc.pathname === "/rpt_lupon" ? (
+            <div>
+              <Route exact path="/report_setup" component={Print} />
+              <Route exact path="/rpt_lupon" component={Rpt_lupon} />
+            </div>
+          ) : (
+            <div>
+              <Header />
+              <SideBar>
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/user" component={User} />
+                  <Route exact path="/logout" component={Logout} />
+                  <Route exact path="/citizen_page" component={citizen_page} />
+                  <Route exact path="/member_list" component={member_list} />
+                  <Route exact path="/lupon_page" component={lupon_page} />
+                  <Route exact path="/Lupon_v2" component={Lupon_v2} />
+                  <Route exact path="/Lupon_v3" component={Lupon_v3} />
+                  <Route exact path="/ckeditor" component={Ckeditor} />
+                  <Route exact path="/report" component={Report_page} />
+                  <Route exact path="/location" component={Location_page} />
+                </Switch>
+              </SideBar>
+            </div>
+          )}
         </div>
       );
     } else {
-      return (
-        <div>
-          <Route exact path="/signup" component={Signup} />
-          <Route exact path="/login" component={Login} />
-        </div>
-      );
     }
+  }
+
+  function Frontpage() {
+    return (
+      <div>
+        <Header />
+        <Route exact path="/signup" component={Signup} />
+        <Route exact path="/login" component={Login} />
+      </div>
+    );
   }
 
   return (
@@ -109,8 +126,8 @@ const App = (props) => {
           pauseOnHover
           theme="dark"
         />
-        <Header />
         <Greeting isLoggedIn={user} />
+        {!user && <Frontpage />}
       </UserContext.Provider>
     </div>
   );
