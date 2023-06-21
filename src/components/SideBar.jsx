@@ -42,11 +42,11 @@ const routes = [
     name: "Members",
     icon: <GroupsIcon />,
   },
-  {
-    path: "/location",
-    name: "Location",
-    icon: <LocationOnIcon />,
-  },
+  // {
+  //   path: "/location",
+  //   name: "Location",
+  //   icon: <LocationOnIcon />,
+  // },
   // {
   //   path: "/lupon_page",
   //   name: "Lupon",
@@ -57,19 +57,24 @@ const routes = [
   //   name: "Lupon v2",
   //   icon: <BiAnalyse />,
   // },
-  {
-    path: "/Lupon_v3",
-    name: "Lupon v3",
-    icon: <BiAnalyse />,
-  },
   // {
-  //   path: "/ckeditor",
-  //   name: "ckeditor",
-  //   icon: <AiTwotoneFileExclamation />,
+  //   path: "/Lupon_v3",
+  //   name: "Lupon v3",
+  //   icon: <BiAnalyse />,
   // },
   {
+    path: "/Lupon_v4",
+    name: "Lupon",
+    icon: <BiAnalyse />,
+  },
+  {
     path: "/report",
-    name: "Report",
+    name: "Report Setup",
+    icon: <DescriptionIcon />,
+  },
+  {
+    path: "/report_generation",
+    name: "Reports",
     icon: <DescriptionIcon />,
   },
   // {

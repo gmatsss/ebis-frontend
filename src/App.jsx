@@ -40,6 +40,9 @@ import Rpt_lupon from "./rpt_lupon";
 
 import Lupon_v2 from "./pages/lupon_v2/lupon";
 import Lupon_v3 from "./pages/lupon_v3/lupon";
+import Lupon from "./pages/lupon_v4/lupon";
+
+import Report_gen from "./pages/report_generation/report_generation";
 
 //api functions to prevent lossing the user data when refreshing react app
 import { getLoggedInUser } from "./api/user";
@@ -52,12 +55,12 @@ const App = (props) => {
 
   //preventing lossing the user data
   useEffect(() => {
-    const unsubscribe = getLoggedInUser()
+    getLoggedInUser()
       .then((res) => {
         if (res.error) {
           toast(res.error);
           history.push("/login");
-        } else setUser(res.username);
+        } else setUser(res.user);
       })
       .catch((err) => toast(err));
   }, []);
@@ -88,9 +91,15 @@ const App = (props) => {
                   <Route exact path="/lupon_page" component={lupon_page} />
                   <Route exact path="/Lupon_v2" component={Lupon_v2} />
                   <Route exact path="/Lupon_v3" component={Lupon_v3} />
+                  <Route exact path="/Lupon_v4" component={Lupon} />
                   <Route exact path="/ckeditor" component={Ckeditor} />
                   <Route exact path="/report" component={Report_page} />
                   <Route exact path="/location" component={Location_page} />
+                  <Route
+                    exact
+                    path="/report_generation"
+                    component={Report_gen}
+                  />
                 </Switch>
               </SideBar>
             </div>

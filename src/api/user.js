@@ -1,9 +1,6 @@
-export const register = async ({ username, email, password } = {}) => {
-  //create a user object
-  const user = { username, email, password };
-  console.log(user);
+export const register = async (user) => {
   try {
-    //REACT_APP_API_URL from.env
+    // REACT_APP_API_URL from.env
     const res = await fetch(
       `${import.meta.env.VITE_REACT_API_URL}/user/register`,
       {
@@ -15,7 +12,6 @@ export const register = async ({ username, email, password } = {}) => {
         body: JSON.stringify(user),
       }
     );
-
     return await res.json();
   } catch (err) {
     throw new Error(`Cannot register user. ${err}`);
@@ -74,5 +70,21 @@ export const getLoggedInUser = async () => {
     return await res.json();
   } catch (err) {
     throw new Error(`Please login. ${err}`);
+  }
+};
+
+export const get_size = async () => {
+  try {
+    //REACT_APP_API_URL from.env
+    const res = await fetch(
+      `${import.meta.env.VITE_REACT_API_URL}/user/g/size`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    return await res.json();
+  } catch (err) {
+    throw new Error(` ${err}`);
   }
 };

@@ -39,7 +39,8 @@ const Login = () => {
       else {
         toast.success(res.message);
         //user is set using usestate and usercontext
-        setUser(res.username);
+        //user is object
+        setUser(res.user);
         //using usehistory react-router-dom it will be redirected to login
         history.push("/");
       }

@@ -145,7 +145,7 @@ const lup_comp_form = (props) => {
     setShow(true);
     setComplaint({
       ...complaint,
-      _id: params.id,
+      _id: params._id,
       compdate: params.compdate,
       compnature: params.compnature,
       description: params.description,
@@ -161,7 +161,6 @@ const lup_comp_form = (props) => {
     if (param === "add") {
       handle_add();
     } else if (param === "edit") {
-      console.log(param);
       props.receivedataform(onEdit);
     }
   };

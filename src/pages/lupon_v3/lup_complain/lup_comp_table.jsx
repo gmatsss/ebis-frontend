@@ -23,16 +23,13 @@ const lup_comp_table = (props) => {
   const { sendRequest } = useFetch();
 
   //data
-  const [columns, setColumns] = useState([]);
-  const [rows, setRows] = useState([]);
-  const [data, setData] = useState();
+  const [data, setData] = useState("");
 
   // mrt disable state
   const [state, setState] = useState(true);
 
   //get data to database
   const getHandler = async (param) => {
-    setRows("");
     setData("");
     try {
       //alert loading
@@ -53,81 +50,49 @@ const lup_comp_table = (props) => {
     }
   };
 
-  const tableHandler = () => {
-    try {
-      const column = [
-        {
-          header: "compid",
-          accessorKey: "compid",
-        },
-        { header: "Complain date", accessorKey: "compdate" },
-        { header: "Complain nature", accessorKey: "compnature" },
-        { header: "Complain status", accessorKey: "compstatus" },
-        {
-          header: "Description",
-          accessorKey: "description",
-        },
-        {
-          header: "DateCreated",
-          accessorKey: "DateCreated",
-          enableEditing: false,
-        },
+  const columns = useMemo(
+    () => [
+      {
+        header: "compid",
+        accessorKey: "compid",
+      },
+      { header: "Complain date", accessorKey: "compdate" },
+      { header: "Complain nature", accessorKey: "compnature" },
+      { header: "Complain status", accessorKey: "compstatus" },
+      {
+        header: "Description",
+        accessorKey: "description",
+      },
+      {
+        header: "DateCreated",
+        accessorKey: "DateCreated",
+        enableEditing: false,
+      },
 
-        {
-          header: "Createdby",
-          accessorKey: "Createdby",
-          enableEditing: false,
-        },
-        {
-          header: "DateModified",
-          accessorKey: "DateModified",
+      {
+        header: "Createdby",
+        accessorKey: "Createdby",
+        enableEditing: false,
+      },
+      {
+        header: "DateModified",
+        accessorKey: "DateModified",
 
-          enableEditing: false,
-        },
-        {
-          header: "Modifiedby",
-          accessorKey: "Modifiedby",
-          enableEditing: false,
-        },
-        { header: "Status", accessorKey: "Status", enableEditing: false },
-        { header: "_id", accessorKey: "_id", enableEditing: false },
-      ];
-
-      //insert data to table
-      let row = [];
-      data.forEach((x) => {
-        row.push({
-          compid: x.compid,
-          compdate: x.compdate,
-          compnature: x.compnature,
-          description: x.description,
-          compstatus: x.compstatus,
-
-          DateCreated: x.DateCreated,
-          Createdby: x.Createdby,
-          DateModified: x.DateModified,
-          Modifiedby: x.Modifiedby,
-          Status: x.Status,
-          id: x._id,
-        });
-      });
-
-      setColumns(column);
-      setRows(row);
-    } catch (e) {
-      //console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    if (!data || data.length === 0) return;
-
-    tableHandler();
-  }, [data]);
+        enableEditing: false,
+      },
+      {
+        header: "Modifiedby",
+        accessorKey: "Modifiedby",
+        enableEditing: false,
+      },
+      { header: "Status", accessorKey: "Status", enableEditing: false },
+      { header: "_id", accessorKey: "_id", enableEditing: false },
+    ],
+    []
+  );
 
   useEffect(() => {
     if (!props.paramsdata) {
-      setRows("");
       setData("");
       return;
     }
@@ -206,7 +171,7 @@ const lup_comp_table = (props) => {
         </Box>
       )}
       columns={columns}
-      data={rows}
+      data={data}
       state={{ showProgressBars: data ? false : true }}
       positionToolbarAlertBanner="none"
       enableRowActions

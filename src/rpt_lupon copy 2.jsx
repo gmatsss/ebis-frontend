@@ -15,6 +15,7 @@ const Rpt_lupon = () => {
   const loc = useLocation();
 
   const { sendRequest } = useFetch();
+  const [showWindowPortal, SetShowWindowPortal] = useState(false);
   const [options, setOptions] = useState("");
   const [getreport, setGetreport] = useState("");
 
@@ -31,30 +32,10 @@ const Rpt_lupon = () => {
 
   const getHandler = async () => {
     try {
-      //alert loading
-      const arr = [];
       const result = await sendRequest(
-        `/g/w/record/${user.barangay}/${user.district}/${user.city}/${user.province}/${user.region}/`,
+        `/g/r/record/647e8bf5f379b12cb9a8473e`,
         "GET"
       );
-      if (result && result.error) return toast.error({ error: result.error });
-      await result.map((res) => {
-        return arr.push({ value: res._id, label: res.reportname });
-      });
-      setOptions(arr);
-    } catch (e) {
-      toast.error({ error: e.message });
-    }
-  };
-
-  const handleChange = async (selected) => {
-    // const getcomplain = await sendRequest(
-    //   `/g/comp/record/${loc.hash.replace("#", "")}`,
-    //   "GET"
-    // );
-
-    try {
-      const result = await sendRequest(`/g/r/record/${selected.value}`, "GET");
       const getcase = await sendRequest(
         `/g/c/record/${loc.hash.replace("#", "")}`,
         "GET"
@@ -185,6 +166,15 @@ const Rpt_lupon = () => {
     }
   };
 
+  // const handleChange = async (selected) => {
+
+  //   // const getcomplain = await sendRequest(
+  //   //   `/g/comp/record/${loc.hash.replace("#", "")}`,
+  //   //   "GET"
+  //   // );
+
+  // };
+
   const handleClose = () => {
     window.close();
   };
@@ -194,12 +184,12 @@ const Rpt_lupon = () => {
         <div className="row">
           <div className="col-9">
             <h1>Lupon Report</h1>
-            <Select
+            {/* <Select
               placeholder="Select report name"
               options={options}
               isLoading={options ? false : true}
               onChange={handleChange}
-            />
+            /> */}
           </div>
 
           <div className="col-3 mt-1">

@@ -94,6 +94,8 @@ const citizen_form = (props) => {
     //console.log(formState);
   }, [formState]);
 */
+
+  console.log(user.username);
   const submitHandler = async () => {
     try {
       if (!Code) {
@@ -107,8 +109,8 @@ const citizen_form = (props) => {
       const details = {
         Code: Code,
         Description: Description,
-        Modifiedby: user,
-        Createdby: user,
+        Modifiedby: user.username,
+        Createdby: user.username,
       };
 
       const result = await sendRequest("/create/record", "POST", details);

@@ -82,11 +82,17 @@ const Member_table = (props) => {
     setChangeB(false);
     try {
       //alert loading
-      const result = await toast.promise(sendRequest("/g/record", "GET"), {
-        pending: "Please wait data is loading",
-        success: "Data loaded",
-        error: `Error`,
-      });
+      const result = await toast.promise(
+        sendRequest(
+          `/g/record/${user.barangay}/${user.district}/${user.city}/${user.province}/${user.region}/`,
+          "GET"
+        ),
+        {
+          pending: "Please wait data is loading",
+          success: "Data loaded",
+          error: `Error`,
+        }
+      );
       if (result && result.error) return toast.error({ error: result.error });
       setData(result);
     } catch (e) {
@@ -107,13 +113,18 @@ const Member_table = (props) => {
     //if using flat data and simple accessorKeys/ids, you can just do a simple assignment here.
     try {
       const details = {
+        region: user.region,
+        province: user.province,
+        city: user.city,
+        district: user.district,
+        barangay: user.barangay,
         _id: values._id,
         code: values.code,
         fname: values.fname,
         lname: values.lname,
         position: values.position,
         gender: values.gender,
-        Modifiedby: user,
+        Modifiedby: user.email,
       };
 
       const result = await sendRequest("/u/record", "POST", details);
@@ -156,7 +167,7 @@ const Member_table = (props) => {
       async function okCb() {
         const details = {
           _id: data._id,
-          Modifiedby: data.Modifiedby,
+          Modifiedby: user.email,
         };
         const result = await sendRequest("/d/record", "POST", details);
         if (result.error) return toast.error(result.error);

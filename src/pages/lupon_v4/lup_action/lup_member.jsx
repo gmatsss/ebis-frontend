@@ -6,23 +6,22 @@ import MaterialReactTable, {
   MRT_ToggleDensePaddingButton,
 } from "material-react-table";
 import { toast } from "react-toastify";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, FlashlightOffRounded } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import { useFetch } from "../../../api/lupon";
+import { useFetch } from "../../../api/lupon_api";
 
 // popup delete
 import Notiflix from "notiflix";
 
 import { UserContext } from "../../../UserContext";
-const Lup_action = (props) => {
+const Lupon_member = (props) => {
   const { user } = useContext(UserContext);
   const { sendRequest } = useFetch();
   const [enableadd, setEnableadd] = useState(false);
 
-  const [idparams, setIDparams] = useState();
+  const [caseid, setCaseid] = useState(false);
 
   const [data, setData] = useState("");
 
@@ -33,12 +32,21 @@ const Lup_action = (props) => {
     //column definitions...
     () => [
       {
-        accessorKey: "id",
-        header: "Id",
+        accessorKey: "code",
+        header: "Member Code",
       },
       {
-        accessorKey: "remark",
-        header: "Remark",
+        accessorKey: "luponmember",
+        header: "Lupon member",
+      },
+
+      {
+        accessorKey: "position",
+        header: "position",
+      },
+      {
+        accessorKey: "gender",
+        header: "gender",
       },
       {
         header: "DateCreated",
@@ -62,6 +70,7 @@ const Lup_action = (props) => {
         enableEditing: false,
       },
       { header: "Status", accessorKey: "Status", enableEditing: false },
+      { header: "memberid", accessorKey: "memberid", enableEditing: false },
     ],
     []
     //end
@@ -71,76 +80,74 @@ const Lup_action = (props) => {
   const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
-    if (!props.receivememid) {
+    if (!props.receivdataid) {
+      setData("");
+      setDeleteid("");
       setEnableadd(false);
-      setIDparams("");
+      setCaseid("");
+      props.givememdid("");
       return;
     }
 
     setEnableadd(true);
-    setIDparams(props.receivememid);
-    props.passidtomodal(props.receivememid);
-  }, [props.receivememid]);
-
-  useEffect(() => {
+    setCaseid(props.receivdataid);
     getHandler();
-  }, [idparams]);
+  }, [props.receivdataid]);
 
-  const getHandler = async (data) => {
+  const getHandler = async (param) => {
     setData("");
     setRowSelection("");
-
-    if (idparams) {
-      try {
+    props.givememdid("");
+    try {
+      //alert loading
+      if (props.receivdataid) {
         const result = await sendRequest(
-          `/g/a/record/${idparams.caseid}/${idparams.memberid}`,
+          `/g/m/record/${props.receivdataid}`,
           "GET"
         );
 
-        if (result.error) throw result.error;
-        const myArray = result.filter(function (obj) {
-          return obj.Status !== 0;
-        });
-        setData(myArray);
-      } catch (e) {
-        toast.error({ error: e.message });
+        if (result && result.error) throw result.error;
+        setData(result);
       }
-    } else {
-      try {
-        const result = await sendRequest(
-          `/g/a/record/${data.caseid}/${data.memberid}`,
-          "GET"
-        );
-
-        if (result.error) throw result.error;
-        const myArray = result.filter(function (obj) {
-          return obj.Status !== 0;
-        });
-        setData(myArray);
-      } catch (e) {
-        toast.error({ error: e.message });
-      }
+      //  else {
+      //   const result = await sendRequest(`/g/m/record/${param}`, "GET");
+      //   if (result && result.error) throw result.error;
+      //   setData(result);
+      // }
+    } catch (e) {
+      toast.error({ error: e.message });
     }
   };
 
-  props.receiveloadremark(getHandler);
+  props.doreload(getHandler);
 
-  const handleDeleteRow = async (data) => {
+  useEffect(() => {
+    let datapass;
+    //if row selection have changed
+    for (name in rowSelection) {
+      datapass = name;
+    }
+    setDeleteid(datapass);
+    if (!datapass) return;
+    const data = { memberid: datapass, caseid: props.receivdataid };
+    props.givememdid(data);
+  }, [rowSelection]);
+
+  const handleDeleteRow = (data) => {
     Notiflix.Confirm.show(
       "Delete ",
-      `Delete this Remark?`,
+      `Delete this Member?`,
       "Yes",
       "No",
       async function okCb() {
         const formData = new FormData();
-        formData.append("id", data.id);
-        formData.append("remark", data.remark);
-        formData.append("Createdby", user);
-        formData.append("Modifiedby", user);
-        const result = await sendRequest("/d/a/record", "POST", formData);
+        formData.append("id", deleteid);
+        formData.append("caseid", props.receivdataid);
+        formData.append("Modifiedby", user.email);
+        const result = await sendRequest("/d/m/record", "POST", formData);
         if (result.error) return toast.error(result.error);
         toast.success(result.success);
-        getHandler(result.id);
+        getHandler();
       },
       function cancelCb() {
         return;
@@ -158,19 +165,47 @@ const Lup_action = (props) => {
       columns={columns}
       data={data}
       getRowId={(row) => row.memberid}
+      enableMultiRowSelection={false} //use radio buttons instead of checkboxes
+      enableRowSelection
       renderTopToolbarCustomActions={({ table, row }) => (
         <Box sx={{ display: "flex", gap: "1rem", p: "4px" }}>
           <Button
             color="success"
             disabled={enableadd ? false : true}
-            onClick={() => props.toinstructmodal("add")}
+            onClick={() => {
+              props.toshowmodal(caseid);
+            }}
             variant="contained"
           >
-            Add remark
+            Add
+          </Button>
+          <Button
+            color="error"
+            disabled={deleteid ? false : true}
+            onClick={() => {
+              handleDeleteRow();
+            }}
+            variant="contained"
+          >
+            Delete
           </Button>
         </Box>
       )}
-      state={{ showProgressBars: data ? false : true }} //pass our managed row selection state to the table to use
+      muiTableBodyRowProps={({ row }) => ({
+        //implement row selection click events manually
+        //getting the data id
+        onClick: () => {
+          setRowSelection(() => ({
+            [row.id]: [row.id],
+          }));
+        },
+
+        sx: {
+          cursor: "pointer",
+        },
+      })}
+      onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+      state={{ rowSelection, showProgressBars: data ? false : true }} //pass our managed row selection state to the table to use
       positionToolbarAlertBanner="none"
       enableStickyHeader
       muiTableContainerProps={{ sx: { maxHeight: "215px" } }}
@@ -178,32 +213,13 @@ const Lup_action = (props) => {
         pagination: { pageSize: 10, pageIndex: 0 },
         density: "compact",
         columnVisibility: {
+          gender: false,
           Createdby: false,
           DateCreated: false,
           Status: false,
-          id: false,
+          _id: false,
         },
       }}
-      enableRowActions
-      renderRowActions={({ row, table }) => (
-        <Box sx={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}>
-          <IconButton
-            onClick={() => {
-              props.toinstructmodal(row.original);
-            }}
-          >
-            <Edit />
-          </IconButton>
-          <IconButton
-            color="error"
-            onClick={() => {
-              handleDeleteRow(row.original); //tuloy mamaya
-            }}
-          >
-            <Delete />
-          </IconButton>
-        </Box>
-      )}
       renderToolbarInternalActions={({ table }) => (
         <Box>
           {/* add custom button to print table  */}
@@ -228,4 +244,4 @@ const Lup_action = (props) => {
   );
 };
 
-export default Lup_action;
+export default Lupon_member;

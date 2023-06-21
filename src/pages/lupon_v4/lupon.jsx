@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   MDBTabs,
   MDBTabsItem,
@@ -7,14 +7,18 @@ import {
   MDBTabsPane,
 } from "mdb-react-ui-kit";
 
-//lupon components
-import Lup_table from "./lup_table";
-import Lup_case from "./lup_case";
-import Lup_complain from "./lup_complain";
+import Lup_table from "./lupon_table";
+import Lupon_respcomp from "./Lupon_comp&resp";
 import Lup_docs from "./lup_docs";
 import Lup_mem_act from "./Lup_mem_act";
+import Lupon_hearing from "./lupon_hearing";
 
-const Lupon = (props) => {
+import { UserContext } from "../../UserContext";
+import { useFetch as uselocation } from "../../api/location";
+import { useEffect } from "react";
+const Lupon = () => {
+  const { sendRequest: sendlocation } = uselocation();
+  const { user } = useContext(UserContext);
   const [basicActive, setBasicActive] = useState("tab1");
 
   const handleBasicClick = (value) => {
@@ -25,8 +29,6 @@ const Lupon = (props) => {
     setBasicActive(value);
   };
 
-  //onclick table pass to form lupon
-
   //data holder
   let Passdatatocomp = (datainfo) => {};
   let Passdatatodocs = (datainfo) => {};
@@ -35,13 +37,17 @@ const Lupon = (props) => {
   // Data holder and passing to lupon forms
   const Getdata = (datainfo) => {
     Passdata && Passdata(datainfo);
-    Passdatatocomp && Passdatatocomp(datainfo);
     Passdatatodocs && Passdatatodocs(datainfo);
     Passdatatomem && Passdatatomem(datainfo);
+    if (datainfo) {
+      Passdatatocomp && Passdatatocomp(datainfo[0]._id);
+    } else {
+      Passdatatocomp && Passdatatocomp(datainfo);
+    }
   };
 
   //bridge to pass to lupon form
-  const PassdataCreator = (handler) => {
+  const receiveRespcomp = (handler) => {
     Passdata = handler;
   };
 
@@ -60,108 +66,59 @@ const Lupon = (props) => {
     Passdatatomem = handler;
   };
 
-  let Passdata2 = (datainfo2) => {};
-  // Data holder and passing to lupon forms
-  const Getdata2 = (datainfo2) => {
-    Passdata2 && Passdata2(datainfo2);
-  };
-
-  const PassdataCreator_2 = (handler2) => {
-    Passdata2 = handler2;
-  };
-
-  //disable form
-  const [param, setParam] = useState(1);
-
-  let receiver = (param) => {
-    // no-op
-  };
-  let receiver2 = (param) => {
-    // no-op
-  };
-
-  let receiver3 = (param) => {
-    // no-op
-  };
-
-  const trigger = (param) => {
-    receiver && receiver(param);
-    receiver2 && receiver2(param);
-    receiver3 && receiver3(param);
-  };
-
-  const handle_caseshow = (x) => {
-    if (x === true) {
-      setParam(1);
-    } else if (x === false) {
-      setParam(0);
-      setT_caseno("");
-    }
-  };
-
-  const receiverCreator = (handler) => {
-    receiver = handler;
-  };
-
-  //reload states
-  const [reloadinfo, setreloadinfo] = useState(true);
-  let Passreload = (reloadinfo) => {};
-  // Data holder and passing to lupon forms
-  const Getreload = (reloadinfo) => {
-    Passreload && Passreload(reloadinfo);
-  };
-  //bridge to pass to lupon form
-  const PassreloadCreator = (handler) => {
-    Passreload = handler;
-  };
-
-  //complain state states
-  const [handle_complain, setHandle_complain] = useState({});
-
-  // Data holder and passing to lupon forms
-  const complaindta = (handle_complain) => {
-    setHandle_complain(handle_complain);
-  };
-
-  //docstate state states
-  const [handle_docs, setHandle_docs] = useState();
-
-  // Data holder and passing to lupon forms
-  const docsdta = (docs) => {
-    setHandle_docs(docs);
-  };
-
+  //disable mrt table case
   const [distab, setDistab] = useState(false);
-
-  //instruct to disbale case table complian
-  const [disablecase, setDisablecase] = useState();
-  const ondisable = (parms) => {
-    setDisablecase(parms);
-    setDistab(parms);
-  };
-
-  //instruct to disbale case table docs
   const [disablecasedocs, setDisablecasedocs] = useState();
   const ondisabledocs = (parms) => {
     setDisablecasedocs(parms);
     setDistab(parms);
   };
 
+  const [usr_loc, setUsr_loc] = useState({
+    region: "",
+    province: "",
+    city: "",
+    district: "",
+    barangay: "",
+  });
+  const loc = async () => {
+    const result = await sendlocation(
+      `/user/record/${user.barangay}/${user.district}/${user.city}/${user.province}/${user.region}/`,
+      "GET"
+    );
+    if (result && result.error) throw result.error;
+
+    setUsr_loc({
+      ...usr_loc,
+      region: result.region,
+      province: result.province,
+      city: result.city,
+      district: result.district,
+      barangay: result.barangay,
+    });
+  };
+  useEffect(() => {
+    loc();
+  }, []);
+
   return (
     <div className="container-fluid ">
       <div className="row">
-        <h1>Lupon </h1>
+        <div className="d-flex">
+          <h1>Lupon</h1>
+          {usr_loc && (
+            <div className="m-1 mt-3 d-flex text-muted">
+              <h5>
+                {usr_loc.region},{usr_loc.province},{usr_loc.city},
+                {usr_loc.district},{usr_loc.barangay}
+              </h5>
+            </div>
+          )}
+        </div>
       </div>
       <div className="row">
         <div className="col-lg-12">
-          <Lup_table
-            onPassdata={Getdata}
-            onPassdata_2={Getdata2}
-            onStateform={trigger}
-            PassreloadCreator={PassreloadCreator}
-            disablefromcomp={disablecase}
-            disablefromdocs={disablecasedocs}
-          />
+          <Lup_table onPassdata={Getdata} disablefromdocs={disablecasedocs} />
         </div>
       </div>
 
@@ -206,20 +163,10 @@ const Lupon = (props) => {
 
         <MDBTabsContent>
           <MDBTabsPane show={basicActive === "tab1"} className="bg-white">
-            <Lup_case
-              PassdataCreator={PassdataCreator}
-              receiverCreator={receiverCreator}
-              onReload={Getreload}
-              PasscomplainCreator={handle_complain}
-              receivedocs={handle_docs}
-              onCaseshow={handle_caseshow}
-            />
+            <Lupon_respcomp receiveRespcomp={receiveRespcomp} />
           </MDBTabsPane>
           <MDBTabsPane show={basicActive === "tab2"} className="bg-white">
-            <Lup_complain
-              receivdatacomp={receivdatacomp}
-              d_tablecase={ondisable}
-            />
+            <Lupon_hearing receiveid={receivdatacomp} />
           </MDBTabsPane>
           <MDBTabsPane show={basicActive === "tab3"} className="bg-white">
             <Lup_docs

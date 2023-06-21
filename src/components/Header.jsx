@@ -51,6 +51,7 @@ const Header = () => {
               </>
             ) : (
               <li className="nav-item  d-flex flex-row">
+                <span className="nav-link">{user.email}</span>
                 {/* <span
                   style={{ cursor: "pointer" }}
                   className="nav-link"

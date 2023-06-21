@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import { UserContext } from "../../../UserContext";
 
 //hooks
-import { useFetch as fetchlupon } from "../../../api/lupon";
+import { useFetch as fetchlupon } from "../../../api/lupon_api";
 import { useFetch as fetchmember } from "../../../api/member";
 
 const Lup_memmodal = (props) => {
@@ -195,9 +195,9 @@ const Lup_memmodal = (props) => {
     formData.append("caseid", Idparam.caseid);
     formData.append("id", memberparam.id);
     formData.append("remark", memberparam.remark);
-    formData.append("Createdby", user);
-    formData.append("Modifiedby", user);
-    if (!memberparam.remark) return toast.warning("Please eneter remark");
+    formData.append("Createdby", user.email);
+    formData.append("Modifiedby", user.email);
+    if (!memberparam.remark) return toast.warning("Please enter remark");
     if (insave === "edit") {
       try {
         const result = await luponreq("/u/a/record", "POST", formData);

@@ -198,6 +198,12 @@ const lup_case = (props) => {
     formData.append("file", selectedFile);
     formData.append("file2", selectedFile2);
 
+    formData.append("region", user.region);
+    formData.append("province", user.province);
+    formData.append("city", user.city);
+    formData.append("district", user.district);
+    formData.append("barangay", user.barangay);
+
     formData.append("caseno", complainant.caseno);
     formData.append("nameofcomp", complainant.nameofcomp);
     formData.append("genderofcomp", complainant.genderofcomp);
@@ -208,8 +214,8 @@ const lup_case = (props) => {
     formData.append("genderofresp", complainant.genderofresp);
     formData.append("addressofresp", complainant.addressofresp);
     formData.append("phoneofresp", complainant.phoneofresp);
-    formData.append("Createdby", user);
-    formData.append("Modifiedby", user);
+    formData.append("Createdby", user.email);
+    formData.append("Modifiedby", user.email);
 
     if (insave == "Edit") {
       try {
@@ -222,7 +228,7 @@ const lup_case = (props) => {
         if (result.error) throw result.error;
         toast.success("Successfully Updated Record");
         setCommandAction(false);
-        await props.onReload(true);
+        props.onReload(true);
         setInsave("");
         setPrevimg_comp("");
         setPrevimg_resp("");

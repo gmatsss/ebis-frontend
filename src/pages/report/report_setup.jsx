@@ -58,14 +58,12 @@ const Report_setup = (props) => {
     setLoad(true);
   };
 
-  console.log(rtpsetup);
-
   const handle_saved = async () => {
     try {
       const details = {
         _id: rtpsetup._id,
         reportsetup: rtpsetup.reportsetup,
-        Modifiedby: user,
+        Modifiedby: user.email,
       };
 
       const result = await sendRequest("/u/setup/record", "POST", details);

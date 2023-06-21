@@ -75,40 +75,47 @@ const Report_table = (props) => {
 
   const [data, setData] = useState({});
   const [rptstp, setRptstp] = useState();
-
+  const [location, setLocation] = useState("");
   const [reportdata, setReportdata] = useState({
     _id: "",
     menuname: "",
   });
 
-  let shouldlog = useRef(true);
-
-  const getHandler = async () => {
-    setData("");
+  const getHandler = async (data, dat2) => {
     try {
-      //alert loading
-      const result = await toast.promise(sendRequest("/g/record", "GET"), {
-        pending: "Please wait data is loading",
-        success: "Data loaded",
-        error: `Error`,
-      });
+      // if (!data) return handle_reset();
+      handle_reset();
+      const result = await toast.promise(
+        sendRequest(
+          `/g/record/${user.barangay}/${user.district}/${user.city}/${user.province}/${user.region}/`,
+          "GET"
+        ),
+        {
+          pending: "Please wait data is loading",
+          success: "Data loaded",
+          error: `Error`,
+        }
+      );
       if (result && result.error) return toast.error({ error: result.error });
       setData(result);
+      // setLocation(data);
+      // if (!dat2) {
+      //   setStatebutton(true);
+      //   setRowSelection("");
+      // }
     } catch (e) {
       console.log(e);
       setLoggeedMessage({ error: e.message });
     }
   };
 
-  useEffect(() => {
-    if (shouldlog.current) {
-      shouldlog.current = false;
-      getHandler();
-    }
-  }, []);
-
+  props.rebrgyvar(getHandler);
   props.receivereload(getHandler);
   props.receiveonreloadsetup(getHandler);
+
+  useEffect(() => {
+    getHandler();
+  }, []);
 
   useEffect(() => {
     let datapass;
@@ -133,9 +140,9 @@ const Report_table = (props) => {
     }
   };
 
-  const handle_refresh = () => {
+  const handle_reset = () => {
     setRowSelection("");
-    getHandler("");
+    setData("");
     setStatebutton(true);
   };
 
@@ -148,12 +155,12 @@ const Report_table = (props) => {
       async function okCb() {
         const details = {
           _id: reportdata._id,
-          Modifiedby: user,
+          Modifiedby: user.email,
         };
         const result = await sendRequest("/d/record", "POST", details);
         if (result.error) return toast.error(result.error);
         toast.success(result.success);
-        handle_refresh();
+        getHandler(location);
       },
       function cancelCb() {
         return;
@@ -234,7 +241,6 @@ const Report_table = (props) => {
               startIcon={
                 <AddCircleIcon style={{ height: "30px", width: "30px" }} />
               }
-              disabled={props.rebrgyvar}
               size="small"
               color="success"
               onClick={() => {
@@ -324,8 +330,9 @@ const Report_table = (props) => {
           },
         })}
         positionToolbarAlertBanner="none"
+        muiTableContainerProps={{ sx: { maxHeight: "350px" } }}
         onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-        state={{ rowSelection, showSkeletons: data ? false : true }} //pass our managed row selection state to the table to use
+        state={{ rowSelection, showProgressBars: data ? false : true }} //pass our managed row selection state to the table to use
         initialState={{
           pagination: { pageSize: 10, pageIndex: 0 },
           density: "spacious",
@@ -349,7 +356,7 @@ const Report_table = (props) => {
             <Tooltip arrow placement="bottom" title="Refresh">
               <IconButton
                 onClick={() => {
-                  handle_refresh();
+                  getHandler();
                 }}
               >
                 <RefreshIcon />

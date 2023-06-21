@@ -105,13 +105,15 @@ const Lupon_member = (props) => {
           `/g/m/record/${props.receivdataid}`,
           "GET"
         );
-        if (result && result.error) throw result.error;
-        setData(result);
-      } else {
-        const result = await sendRequest(`/g/m/record/${param}`, "GET");
+
         if (result && result.error) throw result.error;
         setData(result);
       }
+      //  else {
+      //   const result = await sendRequest(`/g/m/record/${param}`, "GET");
+      //   if (result && result.error) throw result.error;
+      //   setData(result);
+      // }
     } catch (e) {
       toast.error({ error: e.message });
     }
@@ -141,7 +143,7 @@ const Lupon_member = (props) => {
         const formData = new FormData();
         formData.append("id", deleteid);
         formData.append("caseid", props.receivdataid);
-        formData.append("Modifiedby", user);
+        formData.append("Modifiedby", user.email);
         const result = await sendRequest("/d/m/record", "POST", formData);
         if (result.error) return toast.error(result.error);
         toast.success(result.success);
@@ -175,7 +177,7 @@ const Lupon_member = (props) => {
             }}
             variant="contained"
           >
-            Add Member
+            Add
           </Button>
           <Button
             color="error"
@@ -185,7 +187,7 @@ const Lupon_member = (props) => {
             }}
             variant="contained"
           >
-            Delete Selected Accounts
+            Delete
           </Button>
         </Box>
       )}
@@ -203,7 +205,7 @@ const Lupon_member = (props) => {
         },
       })}
       onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-      state={{ rowSelection, showSkeletons: data ? false : true }} //pass our managed row selection state to the table to use
+      state={{ rowSelection, showProgressBars: data ? false : true }} //pass our managed row selection state to the table to use
       positionToolbarAlertBanner="none"
       enableStickyHeader
       muiTableContainerProps={{ sx: { maxHeight: "215px" } }}

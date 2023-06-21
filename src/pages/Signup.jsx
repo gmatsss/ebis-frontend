@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -21,6 +21,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 //api functions
 import { register } from "../api/user";
+import { useFetch as uselocation } from "../api/location";
+import Select from "react-select";
 
 const Signup = () => {
   //usehistory hook to redirect user to login after successful login
@@ -42,8 +44,18 @@ const Signup = () => {
   //handler when button click and callings api
   const handler_reg = async (e) => {
     e.preventDefault();
+    const user = {
+      username: username,
+      email: email,
+      password: password,
+      region: selectedValue.barangay.region,
+      province: selectedValue.barangay.province,
+      city: selectedValue.barangay.city,
+      district: selectedValue.barangay.district,
+      barangay: selectedValue.barangay.value,
+    };
     try {
-      const res = await register({ username, email, password });
+      const res = await register(user);
       if (res.error) toast.error(res.error);
       else {
         toast.success(res.message);
@@ -55,6 +67,216 @@ const Signup = () => {
     }
   };
 
+  //location state
+  const { sendRequest: sendlocation } = uselocation();
+  const [selectedValue, setSelectedValue] = useState({
+    province: null,
+    cities: null,
+    district: null,
+    barangay: null,
+  });
+
+  const [optionvalue, setoptionvalue] = useState({
+    region: null,
+    province: null,
+    cities: null,
+    district: null,
+    barangay: null,
+  });
+
+  const [disable, setDisable] = useState({
+    province: true,
+    cities: true,
+    district: true,
+    barangay: true,
+  });
+
+  //location functions
+
+  useEffect(() => {
+    getHandler();
+  }, []);
+
+  const getHandler = async () => {
+    try {
+      //alert loading
+      const arr = [];
+      const result = await sendlocation("/g/record", "GET");
+      if (result.error) throw result.error;
+      await result.map((res) => {
+        return arr.push({ value: res.code, label: res.description });
+      });
+      setoptionvalue({ ...optionvalue, region: arr });
+    } catch (e) {
+      toast.error({ error: e.message });
+    }
+  };
+
+  const handleregion_change = async (sel) => {
+    setSelectedValue({
+      ...selectedValue,
+      province: "",
+      cities: "",
+      district: "",
+      barangay: "",
+    });
+    setDisable({
+      ...disable,
+      province: true,
+      cities: true,
+      district: true,
+      barangay: true,
+    });
+
+    try {
+      if (!sel.value) return;
+      const arr = [];
+      const result = await sendlocation(`/p/record/${sel.value}`, "GET");
+
+      if (result && result.error) throw result.error;
+      await result.map((res) => {
+        return arr.push({
+          value: res.code,
+          region: res.region,
+          label: res.description,
+        });
+      });
+
+      setoptionvalue({ ...optionvalue, province: arr });
+      setDisable({
+        ...disable,
+        province: false,
+        cities: true,
+        district: true,
+        barangay: true,
+      });
+    } catch (e) {
+      toast.error({ error: e.message });
+    }
+  };
+
+  const handleprovince_change = async (value) => {
+    setSelectedValue({
+      ...selectedValue,
+      province: value,
+      cities: "",
+      district: "",
+      barangay: "",
+    });
+    setDisable({
+      ...disable,
+      cities: true,
+      district: true,
+      barangay: true,
+    });
+
+    try {
+      const arr = [];
+      const result = await sendlocation(
+        `/c/record/${value.value}/${value.region}/`,
+        "GET"
+      );
+      if (result && result.error) throw result.error;
+      await result.map((res) => {
+        return arr.push({
+          value: res.code,
+          region: res.region,
+          province: res.province,
+          label: res.description,
+        });
+      });
+      setoptionvalue({ ...optionvalue, cities: arr });
+      setDisable({
+        ...disable,
+        cities: false,
+        district: true,
+        barangay: true,
+      });
+    } catch (e) {
+      toast.error({ error: e.message });
+    }
+  };
+
+  const handlecities_change = async (value) => {
+    setSelectedValue({
+      ...selectedValue,
+      cities: value,
+      district: "",
+      barangay: "",
+    });
+    setDisable({
+      ...disable,
+      district: true,
+      barangay: true,
+    });
+
+    try {
+      if (!value) return;
+      const arr = [];
+      const result = await sendlocation(
+        `/d/record/${value.value}/${value.province}/${value.region}/`,
+        "GET"
+      );
+
+      if (result && result.error) throw result.error;
+      await result.map((res) => {
+        return arr.push({
+          value: res.code,
+          region: res.region,
+          province: res.province,
+          city: res.city,
+          label: res.description,
+        });
+      });
+      setoptionvalue({ ...optionvalue, district: arr });
+      setDisable({
+        ...disable,
+        district: false,
+        barangay: true,
+      });
+    } catch (e) {
+      toast.error({ error: e.message });
+    }
+  };
+
+  const handledistrict_change = async (value) => {
+    setSelectedValue({ ...selectedValue, district: value, barangay: "" });
+    setDisable({
+      ...disable,
+      barangay: true,
+    });
+    try {
+      if (!value) return;
+      const arr = [];
+      const result = await sendlocation(
+        `/b/record/${value.value}/${value.city}/${value.province}/${value.region}/`,
+        "GET"
+      );
+      if (result && result.error) throw result.error;
+      await result.map((res) => {
+        return arr.push({
+          value: res.code,
+          region: res.region,
+          province: res.province,
+          city: res.city,
+          district: res.district,
+          label: res.description,
+        });
+      });
+      setoptionvalue({ ...optionvalue, barangay: arr });
+      setDisable({
+        ...disable,
+        barangay: false,
+      });
+    } catch (e) {
+      toast.error({ error: e.message });
+    }
+  };
+
+  const handlebaranagay_change = async (value) => {
+    setSelectedValue({ ...selectedValue, barangay: value });
+  };
+
   return (
     <div className="container mt-5 mb-5 col-10 col-sm-8 col-md-6 col-lg-5 ">
       <div className="text-center mb-5 alert alert-primary">
@@ -62,6 +284,63 @@ const Signup = () => {
           Signup
         </label>
       </div>
+
+      <div
+        className=" d-flex flex-column justify-content-evenly "
+        style={{ height: "350px" }}
+      >
+        <hr />
+        <div>
+          <Select
+            placeholder="Select Region"
+            isClearable={true}
+            options={optionvalue.region}
+            isLoading={optionvalue.region ? false : true}
+            onChange={handleregion_change}
+          />
+        </div>
+        <div>
+          <Select
+            placeholder="Select Province"
+            isClearable={true}
+            isDisabled={disable.province}
+            options={optionvalue.province}
+            value={selectedValue.province}
+            onChange={handleprovince_change}
+          />
+        </div>
+        <div>
+          <Select
+            placeholder="Select Cities"
+            isClearable={true}
+            isDisabled={disable.cities}
+            options={optionvalue.cities}
+            value={selectedValue.cities}
+            onChange={handlecities_change}
+          />
+        </div>
+        <div>
+          <Select
+            placeholder="Select District"
+            isClearable={true}
+            isDisabled={disable.district}
+            options={optionvalue.district}
+            value={selectedValue.district}
+            onChange={handledistrict_change}
+          />
+        </div>
+        <div>
+          <Select
+            placeholder="Select Barangay"
+            isClearable={true}
+            isDisabled={disable.barangay}
+            options={optionvalue.barangay}
+            value={selectedValue.barangay}
+            onChange={handlebaranagay_change}
+          />
+        </div>
+      </div>
+
       <div className="form-group">
         <TextField
           className="form-control"
@@ -179,7 +458,8 @@ const Signup = () => {
             !confirmpassword ||
             !username ||
             !email ||
-            !password
+            !password ||
+            !selectedValue.barangay
           }
           variant="contained"
           onClick={handler_reg}

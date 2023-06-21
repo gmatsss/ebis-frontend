@@ -55,14 +55,19 @@ const Member_form = (props) => {
       if (!member.lname) return toast.error(`Please Type a Last name`);
 
       const details = {
+        region: user.region,
+        province: user.province,
+        city: user.city,
+        district: user.district,
+        barangay: user.barangay,
         code: member.code,
         fname: member.fname,
         lname: member.lname,
         position: member.position,
         gender: member.gender,
 
-        Modifiedby: user,
-        Createdby: user,
+        Modifiedby: user.email,
+        Createdby: user.email,
       };
 
       const result = await sendRequest("/create/record", "POST", details);

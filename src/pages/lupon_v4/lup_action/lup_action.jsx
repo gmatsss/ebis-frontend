@@ -11,7 +11,7 @@ import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
-import { useFetch } from "../../../api/lupon";
+import { useFetch } from "../../../api/lupon_api";
 
 // popup delete
 import Notiflix from "notiflix";
@@ -135,8 +135,8 @@ const Lup_action = (props) => {
         const formData = new FormData();
         formData.append("id", data.id);
         formData.append("remark", data.remark);
-        formData.append("Createdby", user);
-        formData.append("Modifiedby", user);
+        formData.append("Createdby", user.email);
+        formData.append("Modifiedby", user.email);
         const result = await sendRequest("/d/a/record", "POST", formData);
         if (result.error) return toast.error(result.error);
         toast.success(result.success);
@@ -166,7 +166,7 @@ const Lup_action = (props) => {
             onClick={() => props.toinstructmodal("add")}
             variant="contained"
           >
-            Add remark
+            Add
           </Button>
         </Box>
       )}
